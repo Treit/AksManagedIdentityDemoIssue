@@ -1,7 +1,14 @@
 # Translated from https://azure.github.io/aad-pod-identity/docs/demo/standard_walkthrough/
 
+if ($args.Length -eq 0) {
+  $env:RESOURCE_GROUP="akstest"
+} else {
+  $env:RESOURCE_GROUP=$args[0]
+}
+
+Write-Host "Using $($env:RESOURCE_GROUP) for the resoruce group name."
+
 $env:SUBSCRIPTION_ID="3a8f9dcb-3662-4322-ae56-e967b95aff7e"
-$env:RESOURCE_GROUP="akstest"
 $env:CLUSTER_NAME="akstestcluster"
 $env:CLUSTER_LOCATION="westus2"
 
@@ -47,9 +54,9 @@ Start-Sleep 30
 $env:IDENTITY_ASSIGNMENT_ID="$(az role assignment create --role Reader --assignee $($env:IDENTITY_CLIENT_ID) --scope /subscriptions/$($env:SUBSCRIPTION_ID)/resourceGroups/$($env:IDENTITY_RESOURCE_GROUP) --query id -otsv)"
 
 if ($env:IDENTITY_ASSIGNMENT_ID -eq "" -or $env:IDENTITY_ASSIGNMENT_ID -eq $null) {
-    Write-Host "Still couldn't get the assignment id. Wait some time and then press <Enter>."
-    Read-Host
-    $env:IDENTITY_ASSIGNMENT_ID="$(az role assignment create --role Reader --assignee $($env:IDENTITY_CLIENT_ID) --scope /subscriptions/$($env:SUBSCRIPTION_ID)/resourceGroups/$($env:IDENTITY_RESOURCE_GROUP) --query id -otsv)"
+  Write-Host "Still couldn't get the assignment id. Wait some time and then press <Enter>."
+  Read-Host
+  $env:IDENTITY_ASSIGNMENT_ID="$(az role assignment create --role Reader --assignee $($env:IDENTITY_CLIENT_ID) --scope /subscriptions/$($env:SUBSCRIPTION_ID)/resourceGroups/$($env:IDENTITY_RESOURCE_GROUP) --query id -otsv)"
 }
 
 Write-Host "Identity assignment id is '$($env:IDENTITY_ASSIGNMENT_ID)'."
@@ -92,12 +99,12 @@ $cmd = "
 apiVersion: v1
 kind: Pod
 metadata:
-  name: demo
+  name: $($env:IDENTITY_NAME)
   labels:
     aadpodidbinding: $($env:IDENTITY_NAME)
 spec:
   containers:
-  - name: demo
+  - name: $($env:IDENTITY_NAME)
     image: mcr.microsoft.com/oss/azure/aad-pod-identity/demo:v1.7.0
     args:
       - --subscriptionid=$($env:SUBSCRIPTION_ID)
