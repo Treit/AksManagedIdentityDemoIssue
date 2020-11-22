@@ -11,7 +11,7 @@ if ($args.Length -eq 0) {
   $env:RESOURCE_GROUP=$args[0]
 }
 
-Write-Host "Using $($env:RESOURCE_GROUP) for the resoruce group name."
+Write-Host "Using $($env:RESOURCE_GROUP) for the resource group name."
 
 $env:CLUSTER_NAME="akstestcluster"
 $env:CLUSTER_LOCATION="westus2"
