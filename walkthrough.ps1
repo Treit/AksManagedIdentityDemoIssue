@@ -1,5 +1,10 @@
 # Translated from https://azure.github.io/aad-pod-identity/docs/demo/standard_walkthrough/
 
+if (!$env:SUBSCRIPTION_ID) {
+  Write-Host "Please set the SUBSCRIPTION_ID environment variable and run again."
+  exit
+}
+
 if ($args.Length -eq 0) {
   $env:RESOURCE_GROUP="akstest"
 } else {
@@ -8,7 +13,6 @@ if ($args.Length -eq 0) {
 
 Write-Host "Using $($env:RESOURCE_GROUP) for the resoruce group name."
 
-$env:SUBSCRIPTION_ID="3a8f9dcb-3662-4322-ae56-e967b95aff7e"
 $env:CLUSTER_NAME="akstestcluster"
 $env:CLUSTER_LOCATION="westus2"
 

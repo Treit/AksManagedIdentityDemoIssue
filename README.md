@@ -15,7 +15,7 @@ By starting in a clean Azure subscription and creating all of the resources from
 1. Clone this repo.
 2. Ensure you have an Azure subscription to run this demo in.
 3. From a PowerShell terminal window, change to the directory containing this README file.
-4. Replace the subscription id in the ./walkthrough.ps1 script with your own subscription id.
+4. Set the SUBSCRIPTION_ID environment variable to your subscription id. Something like `$env:SUBSCRIPTION_ID="072c0117-a2f3-4d50-9bb3-e97f52d4e753"`
 4. Execute ./walkthrough.ps1 and follow the prompts. Some of the steps, such as provisioning the AKS cluster, take a few minutes.
 
 ## Expected result:
@@ -59,6 +59,11 @@ The full PowerShell script is included alongside this README file, but I present
 ```
 # Translated from https://azure.github.io/aad-pod-identity/docs/demo/standard_walkthrough/
 
+if (!$env:SUBSCRIPTION_ID) {
+  Write-Host "Please set the SUBSCRIPTION_ID environment variable and run again."
+  exit
+}
+
 if ($args.Length -eq 0) {
   $env:RESOURCE_GROUP="akstest"
 } else {
@@ -67,7 +72,6 @@ if ($args.Length -eq 0) {
 
 Write-Host "Using $($env:RESOURCE_GROUP) for the resoruce group name."
 
-$env:SUBSCRIPTION_ID="3a8f9dcb-3662-4322-ae56-e967b95aff7e"
 $env:CLUSTER_NAME="akstestcluster"
 $env:CLUSTER_LOCATION="westus2"
 
