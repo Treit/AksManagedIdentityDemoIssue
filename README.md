@@ -14,7 +14,7 @@ By starting in a clean Azure subscription and creating all of the resources from
 ## Steps to reproduce the issue:
 1. Clone this repo.
 2. Ensure you have an Azure subscription to run this demo in.
-3. From a PowerShell terminal window, change the directory containing this README file.
+3. From a PowerShell terminal window, change to the directory containing this README file.
 4. Replace the subscription id in the ./walkthrough.ps1 script with your own subscription id.
 4. Execute ./walkthrough.ps1 and follow the prompts. Some of the steps, such as provisioning the AKS cluster, take a few minutes.
 
