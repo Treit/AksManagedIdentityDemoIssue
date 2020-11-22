@@ -29,7 +29,7 @@ az group create --name $env:RESOURCE_GROUP --location $env:CLUSTER_LOCATION
 Write-Host "Press <Enter> to create an AKS cluster '$($env:CLUSTER_NAME)' in resource group '$($env:RESOURCE_GROUP)'." -ForegroundColor Green
 Read-Host
 
-az aks create -g $env:RESOURCE_GROUP -n $env:CLUSTER_NAME --enable-managed-identity
+az aks create -g $env:RESOURCE_GROUP -n $env:CLUSTER_NAME --enable-managed-identity --generate-ssh-keys
 
 Write-Host  "AKS cluster created. Press <Enter> to get credentials so kubectl will use the new cluster." -ForegroundColor Green
 Read-Host
