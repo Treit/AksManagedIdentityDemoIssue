@@ -17,7 +17,7 @@ az account set -s "$env:SUBSCRIPTION_ID"
 
 az group delete --name $env:RESOURCE_GROUP --yes
 
-Write-Host "If present, the aktest resource group was deleted. Press <Enter> to create a new 'akstest' resource group." -ForegroundColor Green
+Write-Host "If present, the '$($env:RESOURCE_GROUP)' resource group was deleted. Press <Enter> to create a new '$($env:RESOURCE_GROUP)' resource group." -ForegroundColor Green
 Read-Host
 
 az group create --name $env:RESOURCE_GROUP --location $env:CLUSTER_LOCATION
