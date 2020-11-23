@@ -29,14 +29,23 @@ az group create --name $env:RESOURCE_GROUP --location $env:CLUSTER_LOCATION
 Write-Host "Press <Enter> to create an AKS cluster '$($env:CLUSTER_NAME)' in resource group '$($env:RESOURCE_GROUP)'." -ForegroundColor Green
 Read-Host
 
-az aks create -g $env:RESOURCE_GROUP -n $env:CLUSTER_NAME --enable-managed-identity
-
-Write-Host  "AKS cluster created. Press <Enter> to get credentials so kubectl will use the new cluster." -ForegroundColor Green
-Read-Host
-az aks get-credentials --resource-group $env:RESOURCE_GROUP --name $env:CLUSTER_NAME
-
 $env:IDENTITY_RESOURCE_GROUP="MC_$($env:RESOURCE_GROUP)_$($env:CLUSTER_NAME)_$($env:CLUSTER_LOCATION)"
 $env:IDENTITY_NAME="demo"
+
+az aks create -g $env:RESOURCE_GROUP -n $env:CLUSTER_NAME --enable-managed-identity
+
+$env:CLUSTER_MANAGED_ID = az aks show -g $env:RESOURCE_GROUP --name $env:CLUSTER_NAME --query identityProfile.kubeletidentity.clientId -otsv
+
+Write-Host  "AKS cluster created (managed identity is '$($env:CLUSTER_MANAGED_ID)'). Press <Enter> to perform necessary role assignments." -ForegroundColor Green
+Read-Host
+
+az role assignment create --role "Managed Identity Operator" --assignee $env:CLUSTER_MANAGED_ID --scope /subscriptions/$env:SUBSCRIPTION_ID/resourcegroups/$env:IDENTITY_RESOURCE_GROUP
+az role assignment create --role "Virtual Machine Contributor" --assignee $env:CLUSTER_MANAGED_ID --scope /subscriptions/$env:SUBSCRIPTION_ID/resourcegroups/$env:IDENTITY_RESOURCE_GROUP
+
+Write-Host  "Role assignments created. Press <Enter> to get credentials so kubectl will use the new cluster." -ForegroundColor Green
+Read-Host
+
+az aks get-credentials --resource-group $env:RESOURCE_GROUP --name $env:CLUSTER_NAME --overwrite-existing
 
 Write-Host "Identity resource group is: '$($env:IDENTITY_RESOURCE_GROUP)' and Identity name is '$($env:IDENTITY_NAME)'."
 
@@ -81,7 +90,6 @@ Write-Host $cmd
 Read-Host
 
 $cmd | kubectl apply -f -
-
 
 $cmd = "
 apiVersion: `"aadpodidentity.k8s.io/v1`"
