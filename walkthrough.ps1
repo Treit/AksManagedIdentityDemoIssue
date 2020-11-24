@@ -11,7 +11,7 @@ if ($args.Length -eq 0) {
   $env:RESOURCE_GROUP=$args[0]
 }
 
-Write-Host "Using $($env:RESOURCE_GROUP) for the resoruce group name."
+Write-Host "Using $($env:RESOURCE_GROUP) for the resource group name."
 
 $env:CLUSTER_NAME="akstestcluster"
 $env:CLUSTER_LOCATION="westus2"
@@ -32,7 +32,8 @@ Read-Host
 $env:IDENTITY_RESOURCE_GROUP="MC_$($env:RESOURCE_GROUP)_$($env:CLUSTER_NAME)_$($env:CLUSTER_LOCATION)"
 $env:IDENTITY_NAME="demo"
 
-az aks create -g $env:RESOURCE_GROUP -n $env:CLUSTER_NAME --enable-managed-identity
+az aks create -g $env:RESOURCE_GROUP -n $env:CLUSTER_NAME --enable-managed-identity --generate-ssh-keys
+
 
 $env:CLUSTER_MANAGED_ID = az aks show -g $env:RESOURCE_GROUP --name $env:CLUSTER_NAME --query identityProfile.kubeletidentity.clientId -otsv
 
